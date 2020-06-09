@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ChatComponents/Chat.qml</file>
+        <file>ChatComponents/RoomList.qml</file>
+        <file>ChatComponents/MessageList.qml</file>
+        <file>ChatComponents/Message.qml</file>
+        <file>ChatComponents/MessageTextField.qml</file>
+    </qresource>
+</RCC>

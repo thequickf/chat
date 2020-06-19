@@ -6,5 +6,6 @@
         <file>ChatComponents/MessageList.qml</file>
         <file>ChatComponents/Message.qml</file>
         <file>ChatComponents/MessageTextField.qml</file>
+        <file>ChatComponents/FindMessageField.qml</file>
     </qresource>
 </RCC>

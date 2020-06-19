@@ -39,7 +39,7 @@ Rectangle {
             right: parent.right
             bottom: parent.bottom
         }
-        visible: textArea.text != ""
+        visible: textArea.text !== ""
         width: 40
 
         Text {
@@ -52,7 +52,7 @@ Rectangle {
         MouseArea {
             anchors.fill: parent
             onClicked: {
-                // TODO
+                messageListModel.addMessage(textArea.text, true)
                 textArea.text = ""
             }
         }

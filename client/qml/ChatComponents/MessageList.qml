@@ -1,90 +1,111 @@
 import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
 
 Item {
     id: mainItem
 
-    ListModel {
-        id: messageModel
+    FindMessageField {
+        id: findMessageField
 
-        ListElement {
-            my: true
-            message: "Hey you, out there in the cold\
- Getting lonely, getting old\
- Can you feel me?\
- Hey you, standing in the aisles\
- With itchy feet and fading smiles\
- Can you feel me?\
- Hey you, don't help them to bury the light\
- Don't give in without a fight"
+        anchors {
+            left: parent.left
+            top: parent.top
+            right: parent.right
         }
-        ListElement {
-            my: true
-            message: "Hey you, out there in the cold\n\
-Getting lonely, getting old\n\
-Can you feel me?\n\
-Hey you, standing in the aisles\n\
-With itchy feet and fading smiles\n\
-Can you feel me?\n\
-Hey you, don't help them to bury the light\n\
-Don't give in without a fight"
-        }
-        ListElement {
-            my: false
-            message: "Who was born in a house full of pain.\
- Who was trained not to spit in the fan.\
- Who was told what to do by the man.\
- Who was broken by trained personnel.\
- Who was fitted with collar and chain.\
- Who was given a pat on the back.\
- Who was breaking away from the pack.\
- Who was only a stranger at home.\
- Who was ground down in the end.\
- Who was found dead on the phone.\
- Who was dragged down by the stone.\
- Who was dragged down by the stone."
-        }
-        ListElement {
-            my: true
-            message: "Who was told what to do by the man."
-        }
-        ListElement {
-            my: false
-            message: "Waters\nRoger\nSyd\nBarret\nTest?"
-        }
-        ListElement {
-            my: true
-            message: "Harry\nPotter"
-        }
-        ListElement {
-            my: false
-            message: "First"
-        }
-        ListElement {
-            my: true
-            message: "Second"
-        }
-        ListElement {
-            my: true
-            message: "Third"
+        height: 0
+        visible: false
+
+        onActiveChanged: {
+            // the order is important
+            if (active) {
+                height = implicitHeight
+                visible = true
+                findMessageButton.enabled = false
+                findMessageButton.visible = false
+                flickableItem.contentHeight = messagesColumn.height
+                messagesColumn.y = 0
+            } else {
+                findMessageButton.enabled = true
+                findMessageButton.visible = true
+                messagesColumn.y = findMessageButton.height
+                flickableItem.contentHeight += findMessageButton.height
+                height = 0
+                visible = false
+            }
+
         }
     }
 
-    ScrollView {
-        anchors.fill: parent
+    Rectangle {
+        id: findMessageButton
+        anchors {
+            top: parent.top
+            right: parent.right
+        }
+        border.color: "#bba5d8ff"
+        border.width: 2
+        color: "#bbdee2e6"
+        height: findButtonText.height + 10
+        width: findButtonText.width + 10
+        z: 1
+
+        Text {
+            id: findButtonText
+            text: "Find Message"
+            anchors.centerIn: parent
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                findMessageField.active = !findMessageField.active
+            }
+        }
+    }
+
+    Flickable {
+        id: flickableItem
+
+        anchors {
+            left: parent.left
+            top: findMessageField.bottom
+            right: parent.right
+            bottom: parent.bottom
+        }
+        boundsBehavior: Flickable.StopAtBounds
         clip: true
+        contentHeight: messagesColumn.height  + findMessageButton.height
+        contentWidth: mainItem.width
+
+        Connections {
+            target: messagesColumn
+
+            function onHeightChanged() {
+                if (flickableItem.atYBeginning)
+                    console.log("atYBeginning")
+                if (flickableItem.atYEnd)
+                    console.log("atYEnd")
+                var ratio = 1.0 - flickableItem.visibleArea.heightRatio;
+                var endPos = flickableItem.contentHeight * ratio;
+                flickableItem.contentY = endPos
+                console.log(messagesColumn.children[0].y)
+                console.log(messagesColumn.children[1].y)
+                console.log(messagesColumn.children[2].y)
+            }
+        }
 
         Column {
-            anchors.fill: parent
+            id: messagesColumn
+
+            width: mainItem.width
+            y: findMessageButton.height
 
             Repeater {
-                model: messageModel
+                model: messageListModel
 
                 Message {
                     width: mainItem.width
                     text: message
-                    own: my
+                    own: mine
                 }
             }
         }

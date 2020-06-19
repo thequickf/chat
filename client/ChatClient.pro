@@ -1,4 +1,4 @@
-QT += quick
+QT += quick websockets
 
 CONFIG += c++11
 
@@ -14,7 +14,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        src/main.cpp
+        src/main.cpp \
+        src/models/messagelistmodel.cpp \
+        src/models/roomlistmodel.cpp
 
 RESOURCES += qml/qml.qrc
 
@@ -28,3 +30,7 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+HEADERS += \
+    src/models/messagelistmodel.h \
+    src/models/roomlistmodel.h
